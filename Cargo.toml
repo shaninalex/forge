@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+http-type = "20.0.6"
+serde = { version = "1.0.228", features = ["derive"] }
