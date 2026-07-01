@@ -1,6 +1,6 @@
-use std::collections::HashMap;
-use serde::Deserialize;
 use http_type::{serde_json, Method};
+use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
@@ -31,18 +31,12 @@ pub enum Action {
     McpCall {
         server: String,
         prompt: String,
-    }
+    },
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Assertion {
     pub expression: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Expectation {
-    pub selector: String,
-    pub value: String,
 }
 
 
@@ -54,5 +48,5 @@ pub struct Step {
     pub action: Action,
 
     pub asserts: Option<Vec<Assertion>>,
-    pub expect_match: Option<Vec<Expectation>>,
+    pub expect_match: Option<HashMap<String, String>>,
 }

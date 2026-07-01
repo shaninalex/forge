@@ -2,13 +2,13 @@ pipeline: e_commerce_checkout
 steps:
   - id: add_to_cart
     type: http
-    method: POST
+    method: Post
     url: https://api.yourshop.com/cart
     body: { "item_id": 123, "qty": 1 }
 
   - id: checkout
     type: http
-    method: POST
+    method: Post
     url: https://api.yourshop.com/checkout
     headers:
       Authorization: "Bearer {{ env.TOKEN }}"
@@ -25,7 +25,7 @@ steps:
 
   - id: verify_order_status
     type: http
-    method: GET
+    method: Get
     url: https://api.yourshop.com/orders/{{ steps.checkout.response.body.order_id }}
     assert:
       - response.status == 200
