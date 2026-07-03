@@ -19,7 +19,6 @@ fn main() {
     let cli = Cli::parse();
 
     let content = fs::read_to_string(&cli.file).unwrap();
-
     let p: Pipeline = serde_yaml::from_str(&content).expect("error");
 
     println!("Pipeline: {:?}", p.pipeline);
