@@ -3,6 +3,6 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Pipeline {
-    pipeline: String,
-    steps: Vec<Step>,
+    pub pipeline: String,
+    pub steps: Vec<Step>,
 }
