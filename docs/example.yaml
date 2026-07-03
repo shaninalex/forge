@@ -1,32 +1,43 @@
-pipeline: e_commerce_checkout
+pipeline: posts_and_users
 steps:
-  - id: add_to_cart
+  - id: get_posts
     type: http
-    method: Post
-    url: https://api.yourshop.com/cart
-    body: { "item_id": 123, "qty": 1 }
+    method: POST
+    url: https://jsonplaceholder.typicode.com/posts
+    body: {
+      "title": "foo",
+      "body": "bar",
+      "userId": 1,
+    }
 
-  - id: checkout
+  - id: create_user
     type: http
-    method: Post
-    url: https://api.yourshop.com/checkout
+    method: POST
+    url: https://jsonplaceholder.typicode.com/users
     headers:
       Authorization: "Bearer {{ env.TOKEN }}"
-    body: { "cart_id": "{{ steps.add_to_cart.response.body.id }}" }
+    body: {
+      "username": "Bret",
+      "email": "Sincere@april.biz"
+    }
 
   # The engine spins up a temporary listener
-  - id: wait_for_payment_webhook
-    type: webhook_listener
-    port: 8080
-    timeout_seconds: 30
-    expect_match:
-      body.status: "succeeded"
-      body.order_id: "{{ steps.checkout.response.body.order_id }}"
+  #  - id: wait_for_payment_webhook
+  #    type: webhook_listener
+  #    port: 8080
+  #    timeout_seconds: 30
+  #    expect_match:
+  #      body.status: "succeeded"
+  #      body.order_id: "{{ steps.checkout.response.body.order_id }}"
 
-  - id: verify_order_status
+  - id: verify_user
     type: http
-    method: Get
-    url: https://api.yourshop.com/orders/{{ steps.checkout.response.body.order_id }}
+    method: GET
+    url: https://jsonplaceholder.typicode.com/users
+    query: {
+      "id": "{{ steps.create_user.response.body.id }}",
+      "_limit": "1",
+    }
     assert:
       - response.status == 200
       - response.body.status == "PAID"
