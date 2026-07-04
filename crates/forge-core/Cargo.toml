@@ -1,0 +1,10 @@
+[package]
+name = "forge-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+http-type = "20.0.6"
+reqwest = { version = "0.13.4", features = ["blocking", "json", "query"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_yaml = "0.9.34"
