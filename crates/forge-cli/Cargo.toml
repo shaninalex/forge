@@ -1,0 +1,12 @@
+[package]
+name = "forge-cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "forge"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+forge-core = { path = "../forge-core" }

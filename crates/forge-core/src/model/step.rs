@@ -1,12 +1,7 @@
+use super::Assertion;
 use crate::action::Action;
 use serde::Deserialize;
 use std::collections::HashMap;
-
-#[derive(Debug, Deserialize)]
-pub struct Assertion {
-    pub expression: String,
-}
-
 
 #[derive(Debug, Deserialize)]
 pub struct Step {
