@@ -11,5 +11,5 @@ pub struct Step {
     pub action: Action,
 
     pub asserts: Option<Vec<Assertion>>,
-    pub expect_match: Option<HashMap<String, String>>,
+    // pub expect_match: Option<HashMap<String, String>>,
 }

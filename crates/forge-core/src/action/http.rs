@@ -4,6 +4,7 @@ use reqwest::Method;
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::time::Instant;
 
 #[derive(Debug, Deserialize)]
 pub struct HttpAction {
@@ -35,10 +36,22 @@ impl Executor for HttpAction {
             request = request.json(body);
         }
 
+        let start = Instant::now();
         let response = client.execute(request.build()?)?;
+        let duration = start.elapsed().as_millis();
+
         let status = response.status();
+        let mut headers: HashMap<String, String> = HashMap::new();
+
+        for (k, v) in response.headers().iter() {
+            headers.insert(
+                k.to_string(),
+                v.to_str()?.to_owned(),
+            );
+        }
+
         let body = response.text()?;
 
-        Ok(ActionResponse { status, body })
+        Ok(ActionResponse { status, body, headers, duration })
     }
 }

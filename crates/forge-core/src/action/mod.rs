@@ -6,6 +6,7 @@
 
 mod http;
 
+use std::collections::HashMap;
 pub use http::HttpAction;
 
 use serde::Deserialize;
@@ -24,6 +25,8 @@ pub enum Action {
 pub struct ActionResponse {
     pub status: reqwest::StatusCode,
     pub body: String,
+    pub headers: HashMap<String, String>,
+    pub duration: u128, // milliseconds
 }
 
 /// Anything the engine can execute.

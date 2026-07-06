@@ -11,6 +11,11 @@ pub fn run(pipeline: &Pipeline) -> RunReport {
 
     for step in &pipeline.steps {
         let result = step.action.execute().map_err(|err| err.to_string());
+        if step.asserts.is_some() {
+            // check condition
+            // if validation failed => break
+        }
+
         steps.push(StepOutcome {
             id: step.id.clone(),
             result,
