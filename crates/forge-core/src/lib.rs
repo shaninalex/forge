@@ -12,6 +12,7 @@
 //! 3. Render the report however the interface likes.
 
 pub mod action;
+pub mod assert;
 pub mod engine;
 pub mod model;
 pub mod report;
