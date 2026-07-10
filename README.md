@@ -2,9 +2,7 @@
 
 Api testing tool.
 
-### Run
-
 ``` 
-forge --help
-forge --file docs/example.yaml
+$ forge --help
+$ forge execute docs/example.yaml --verbose
 ```
