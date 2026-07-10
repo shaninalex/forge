@@ -1,0 +1,22 @@
+stages:
+  - test
+
+variables:
+  GO_VERSION: "1.26.3"
+
+test:
+  stage: test
+  image: golang:${GO_VERSION}
+  rules:
+    # - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+  before_script:
+    - git fetch --all
+    - git checkout main || true
+    - go version
+
+  script:
+    - go mod tidy
+    - go test -v -coverprofile cover.out ./app/...
