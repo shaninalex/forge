@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/shaninalex/forgecore/app/cmd/commands"
 )
 
 func NewRootCmd() (cmd *cobra.Command) {
@@ -11,13 +12,11 @@ func NewRootCmd() (cmd *cobra.Command) {
 		Use: "forge",
 	}
 
-	// TODO:
-	// Add commands here like this
-	// cmd.AddCommand(commands.NewRootServeCommand())
+	// Commands
+	cmd.AddCommand(commands.NewRootExecuteCommand())
 
-	// NOTE:
-	// - not sure about config path. For testing tool will be better have both - env and file based YAML
-	// cmd.PersistentFlags().String("config", "", "Configuration path. Required.")
+	// Flags
+	cmd.PersistentFlags().Bool("verbose", false, "Verbose output")
 
 	return cmd
 }
