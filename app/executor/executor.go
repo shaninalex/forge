@@ -2,25 +2,67 @@ package executor
 
 import (
 	"fmt"
+	"os"
+	"sync"
+	"time"
 
+	"gitlab.com/shaninalex/forgecore/app/executor/actions"
 	"gitlab.com/shaninalex/forgecore/app/model"
+	"gopkg.in/yaml.v3"
 )
 
 type Executor interface {
-	Run(p *model.Pipeline)
-	Exec(action *model.Action)
+	Exec()
+	Parse(pipeLinePath string) error
 }
 
-type BaseExecutor struct{}
-
-var _ Executor = (*BaseExecutor)(nil)
-
-func (s *BaseExecutor) Run(p *model.Pipeline) {
-	for _, step := range p.Steps {
-		s.Exec(&step.Action)
+func ProvideExecutor() Executor {
+	return &BaseExecutor{
+		pipeline: nil,
+		mux:      sync.Mutex{},
+		results:  map[string]*model.Response{},
 	}
 }
 
-func (s *BaseExecutor) Exec(action *model.Action) {
-	fmt.Println("Executing action:", action)
+type BaseExecutor struct {
+	pipeline *model.Pipeline
+	mux      sync.Mutex
+	results  map[string]*model.Response
+}
+
+var _ Executor = (*BaseExecutor)(nil)
+
+func (s *BaseExecutor) Exec() {
+	t := time.Now()
+	for _, step := range s.pipeline.Steps {
+		switch a := step.Action.(type) {
+		case *model.HttpAction:
+			data, err := actions.ProcessHttpAction(a)
+			if err != nil {
+				fmt.Println("Error processing http action:", err)
+				continue
+			}
+
+			// redirects are not implemented yet
+			if data.StatusCode > 300 {
+				fmt.Printf("[%s] Error processing http action: %d\nResponse: %s", step.Id, data.StatusCode, string(data.Body))
+			}
+			s.mux.Lock()
+			s.results[step.Id] = data
+			s.mux.Unlock()
+		}
+	}
+
+	fmt.Printf("Executing action completed after: %fs\n", time.Since(t).Seconds())
+}
+
+func (s *BaseExecutor) Parse(pipeLinePath string) error {
+	var p model.Pipeline
+	b, err := os.ReadFile(pipeLinePath)
+	if err != nil {
+		return err
+	}
+	err = yaml.Unmarshal(b, &p)
+	s.pipeline = &p
+	return err
 }

@@ -4,11 +4,12 @@ steps:
     type: http
     method: POST
     url: https://jsonplaceholder.typicode.com/posts
-    body: {
+    content_type: application/json
+    body: '{
       "title": "foo",
       "body": "bar",
-      "userId": 1,
-    }
+      "userId": 1
+    }'
 
   - id: create_user
     type: http
@@ -16,19 +17,11 @@ steps:
     url: https://jsonplaceholder.typicode.com/users
     headers:
       Authorization: "Bearer {{ env.TOKEN }}"
-    body: {
+    content_type: application/json
+    body: '{
       "username": "Bret",
       "email": "Sincere@april.biz"
-    }
-
-  # The engine spins up a temporary listener
-  #  - id: wait_for_payment_webhook
-  #    type: webhook_listener
-  #    port: 8080
-  #    timeout_seconds: 30
-  #    assert:
-  #      body.status: "succeeded"
-  #      body.order_id: "{{ steps.checkout.response.body.order_id }}"
+    }'
 
   - id: verify_user
     type: http
@@ -41,3 +34,12 @@ steps:
     assert:
       - response.status == 200
       - response.body.status == "PAID"
+
+  # The engine spins up a temporary listener
+  #  - id: wait_for_payment_webhook
+  #    type: webhook_listener
+  #    port: 8080
+  #    timeout_seconds: 30
+  #    assert:
+  #      body.status: "succeeded"
+  #      body.order_id: "{{ steps.checkout.response.body.order_id }}"

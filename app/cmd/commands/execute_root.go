@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"gitlab.com/shaninalex/forgecore/app/executor"
 	"go.uber.org/dig"
 )
 
@@ -17,22 +18,31 @@ func NewRootExecuteCommand() (cmd *cobra.Command) {
 		Run: func(cmd *cobra.Command, args []string) {
 			c := dig.New()
 
-			_, err := os.Stat(args[0])
+			pipelinePath := args[0]
+			_, err := os.Stat(pipelinePath)
 			if err != nil {
 				panic(err)
 			}
 
 			ctx, appCancel := context.WithCancel(cmd.Context())
 			defer appCancel()
+
 			_ = c.Provide(func() context.Context {
 				return ctx
 			})
 
-			err = c.Invoke(func(ctx context.Context) {
+			_ = executor.Module(c)
 
-				log.Println("Executing pipeline")
-			})
-			if err != nil {
+			if err = c.Invoke(func(ctx context.Context, executor executor.Executor) {
+				log.Println("Executing pipeline: ", pipelinePath)
+
+				if err = executor.Parse(pipelinePath); err != nil {
+					panic(err)
+				}
+
+				executor.Exec()
+
+			}); err != nil {
 				panic(err)
 			}
 		},
