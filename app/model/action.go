@@ -15,12 +15,13 @@ const (
 
 // HttpAction performs a single HTTP request.
 type HttpAction struct {
-	Type    ActionType        `yaml:"type"`
-	Method  HttpMethod        `yaml:"method"`
-	Url     string            `yaml:"url"`
-	Query   map[string]string `yaml:"query,omitempty"`
-	Headers map[string]string `yaml:"headers,omitempty"`
-	Body    any               `yaml:"body,omitempty"`
+	Type        ActionType        `yaml:"type"`
+	Method      HttpMethod        `yaml:"method"`
+	Url         string            `yaml:"url"`
+	Query       map[string]string `yaml:"query,omitempty"`
+	Headers     map[string]string `yaml:"headers,omitempty"`
+	Body        string            `yaml:"body,omitempty"`
+	ContentType string            `yaml:"content_type,omitempty"`
 }
 
 // GraphQLAction performs a single GraphQL query.
