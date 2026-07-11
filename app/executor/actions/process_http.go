@@ -37,7 +37,7 @@ func ProcessHttpAction(action *model.HttpAction) (*model.Response, error) {
 	}
 
 	if action.ContentType == "" {
-		req.Header.Add("Content-Type", action.ContentType)
+		req.Header.Add("Content-Type", "application/json")
 	} else {
 		req.Header.Add("Content-Type", action.ContentType)
 	}

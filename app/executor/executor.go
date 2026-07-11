@@ -42,6 +42,11 @@ func (s *BaseExecutor) Exec() {
 				fmt.Println("Error processing http action:", err)
 				continue
 			}
+
+			// redirects are not implemented yet
+			if data.StatusCode > 300 {
+				fmt.Printf("[%s] Error processing http action: %d\nResponse: %s", step.Id, data.StatusCode, string(data.Body))
+			}
 			s.mux.Lock()
 			s.results[step.Id] = data
 			s.mux.Unlock()
