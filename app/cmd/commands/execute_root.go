@@ -2,7 +2,7 @@ package commands
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -33,7 +33,7 @@ func NewRootExecuteCommand() (cmd *cobra.Command) {
 
 			_ = executor.Module(c)
 
-			log.Println("Executing pipeline: ", pipelinePath)
+			fmt.Println("Executing pipeline: ", pipelinePath)
 			if err = c.Invoke(func(ctx context.Context, executor executor.Executor) {
 
 				if err = executor.Parse(pipelinePath); err != nil {

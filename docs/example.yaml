@@ -11,7 +11,7 @@ steps:
       "userId": 1
     }'
     assert:
-      - status eq 201
+      - "status eq 201"
 
   - id: create_user
     type: http
@@ -30,11 +30,11 @@ steps:
     method: GET
     url: https://jsonplaceholder.typicode.com/users
     query:
-      id": "{{ steps.create_user.response.body.id }}"
+      id: "{{ create_user | body id }}"
       _limit: "1"
     assert:
-      - status eq 200
-      - body status eq PAID
+      - "status eq 200"
+      - "body 0.name eq Leanne Graham"
 
   # The engine spins up a temporary listener
   #  - id: wait_for_payment_webhook
@@ -42,5 +42,5 @@ steps:
   #    port: 8080
   #    timeout_seconds: 30
   #    assert:
-  #      - body.status eq "succeeded"
-  #      - body.order_id eq "{{ steps.checkout.response.body.order_id }}"
+  #      - "body status eq succeeded"
+  #      - "body order_id eq {{ steps.checkout.response.body.order_id }}"
