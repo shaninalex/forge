@@ -2,6 +2,7 @@ package executor
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"slices"
 	"strings"
@@ -11,7 +12,6 @@ import (
 )
 
 func ProcessAssert(resp *model.Response, a *model.Assert) bool {
-	// get data from response via a.Query
 	data, err := GetData(resp, a.Query)
 	if err != nil {
 		log.Println(err)
@@ -54,13 +54,13 @@ func GetData(resp *model.Response, expression string) (any, error) {
 	}
 
 	if parts[0] == "body" {
-		if resp.Header.Get("Content-Type") != "application/json" {
+		if !strings.Contains(resp.Header.Get("Content-Type"), "application/json") {
 			return nil, ContentTypeNotProcessableError
 		}
 
 		result := gjson.Get(string(resp.Body), parts[1])
 		if !result.Exists() {
-			return nil, CantFindJsonKeyError
+			return nil, fmt.Errorf("%w: \"%s\"", CantFindJsonKeyError, parts[1])
 		}
 
 		return result.Value(), nil
