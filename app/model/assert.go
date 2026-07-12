@@ -1,27 +1,27 @@
 package model
 
-type FilterCondition string
+type CompareOperator string
 
 const (
-	IsEqualTo        FilterCondition = "eq"
-	IsNotEqualTo     FilterCondition = "neq"
-	IsGreater        FilterCondition = "gt"
-	IsGreaterOrEqual FilterCondition = "gteq"
-	IsLower          FilterCondition = "lt"
-	IsLowerOrEqual   FilterCondition = "lteq"
-	IsContain        FilterCondition = "contains"
-	IsNotContain     FilterCondition = "ncontains"
-	IsStartWith      FilterCondition = "starts"
-	IsNotStartWith   FilterCondition = "nstarts"
-	IsEndWith        FilterCondition = "ends"
-	IsNotEndWith     FilterCondition = "nends"
-	IsEmpty          FilterCondition = "empty"
-	IsNotEmpty       FilterCondition = "nempty"
-	IsTimeInterval   FilterCondition = "time_interval"
-	IsTimePart       FilterCondition = "time_part"
+	IsEqualTo        CompareOperator = "eq"
+	IsNotEqualTo     CompareOperator = "neq"
+	IsGreater        CompareOperator = "gt"
+	IsGreaterOrEqual CompareOperator = "gteq"
+	IsLower          CompareOperator = "lt"
+	IsLowerOrEqual   CompareOperator = "lteq"
+	IsContain        CompareOperator = "contains"
+	IsNotContain     CompareOperator = "ncontains"
+	IsStartWith      CompareOperator = "starts"
+	IsNotStartWith   CompareOperator = "nstarts"
+	IsEndWith        CompareOperator = "ends"
+	IsNotEndWith     CompareOperator = "nends"
+	IsEmpty          CompareOperator = "empty"
+	IsNotEmpty       CompareOperator = "nempty"
+	IsTimeInterval   CompareOperator = "time_interval"
+	IsTimePart       CompareOperator = "time_part"
 )
 
-var TFilterCondition = []FilterCondition{
+var TCompareOperator = []CompareOperator{
 	IsEqualTo,
 	IsNotEqualTo,
 	IsGreater,
@@ -40,8 +40,8 @@ var TFilterCondition = []FilterCondition{
 	IsTimePart,
 }
 
-func (c FilterCondition) IsValid() bool {
-	for _, v := range TFilterCondition {
+func (c CompareOperator) IsValid() bool {
+	for _, v := range TCompareOperator {
 		if v == c {
 			return true
 		}
@@ -53,7 +53,7 @@ func (c FilterCondition) IsValid() bool {
 type Assert struct {
 	Expression string
 
-	Op    FilterCondition
+	Op    CompareOperator
 	Query string
 	Value string
 }

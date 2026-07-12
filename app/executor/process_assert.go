@@ -10,17 +10,14 @@ import (
 	"gitlab.com/shaninalex/forgecore/app/model"
 )
 
-func ProcessAssert(resp model.Response, a model.Assert) bool {
+func ProcessAssert(resp *model.Response, a *model.Assert) bool {
 	// get data from response via a.Query
-	_, err := GetData(resp, a.Query)
+	data, err := GetData(resp, a.Query)
 	if err != nil {
 		log.Println(err)
 		return false
 	}
-
-	// TODO: compare (a.Op) that data with a.Value
-
-	return true
+	return Compare(data, a.Value, a.Op)
 }
 
 var (
@@ -35,7 +32,7 @@ var qParts = []string{
 	"header", "body",
 }
 
-func GetData(resp model.Response, expression string) (any, error) {
+func GetData(resp *model.Response, expression string) (any, error) {
 	expression = strings.TrimSpace(expression)
 	parts := strings.Split(expression, " ")
 	l := len(parts)

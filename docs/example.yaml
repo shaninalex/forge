@@ -10,6 +10,8 @@ steps:
       "body": "bar",
       "userId": 1
     }'
+    assert:
+      - status eq 201
 
   - id: create_user
     type: http
@@ -32,7 +34,7 @@ steps:
       _limit: "1"
     assert:
       - status eq 200
-      - body.status eq PAID
+      - body status eq PAID
 
   # The engine spins up a temporary listener
   #  - id: wait_for_payment_webhook

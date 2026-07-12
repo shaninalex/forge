@@ -10,7 +10,7 @@ import (
 )
 
 func Test_GetData(t *testing.T) {
-	jsonResp := model.Response{
+	jsonResp := &model.Response{
 		Body:       []byte(`{"id": 1, "name": "forge", "active": true, "nested": {"key": "value"}}`),
 		StatusCode: 200,
 		Header: http.Header{
@@ -21,7 +21,7 @@ func Test_GetData(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		resp       model.Response
+		resp       *model.Response
 		expression string
 		want       any
 		wantErr    error
@@ -82,7 +82,7 @@ func Test_GetData(t *testing.T) {
 		},
 		{
 			name: "body with non-json content type errors",
-			resp: model.Response{
+			resp: &model.Response{
 				Body:       []byte("plain text"),
 				StatusCode: 200,
 				Header: http.Header{

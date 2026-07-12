@@ -33,8 +33,8 @@ func NewRootExecuteCommand() (cmd *cobra.Command) {
 
 			_ = executor.Module(c)
 
+			log.Println("Executing pipeline: ", pipelinePath)
 			if err = c.Invoke(func(ctx context.Context, executor executor.Executor) {
-				log.Println("Executing pipeline: ", pipelinePath)
 
 				if err = executor.Parse(pipelinePath); err != nil {
 					panic(err)

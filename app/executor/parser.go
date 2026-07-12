@@ -7,7 +7,7 @@ Examples of expressions:
 - body status eq true
 */
 
-package tokenizer
+package executor
 
 import (
 	"strings"
@@ -15,18 +15,18 @@ import (
 	"gitlab.com/shaninalex/forgecore/app/model"
 )
 
-func Parse(expression string) (*model.Assert, error) {
+func ParseAssert(expression string) (*model.Assert, error) {
 	expression = strings.TrimSpace(expression)
 	parts := strings.Split(expression, " ")
 	a := &model.Assert{
 		Expression: expression,
 	}
 	for i, p := range parts {
-		if !model.FilterCondition(p).IsValid() {
+		if !model.CompareOperator(p).IsValid() {
 			continue
 		}
 
-		a.Op = model.FilterCondition(p)
+		a.Op = model.CompareOperator(p)
 		a.Query = strings.Join(parts[:i], " ")
 		a.Value = strings.Join(parts[i+1:], " ")
 	}

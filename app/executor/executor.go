@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fatih/color"
 	"gitlab.com/shaninalex/forgecore/app/executor/actions"
 	"gitlab.com/shaninalex/forgecore/app/model"
 	"gopkg.in/yaml.v3"
@@ -35,6 +36,8 @@ var _ Executor = (*BaseExecutor)(nil)
 func (s *BaseExecutor) Exec() {
 	t := time.Now()
 	for _, step := range s.pipeline.Steps {
+		st := time.Now()
+		fmt.Printf("[%s]: executing step\n", step.Id)
 		switch a := step.Action.(type) {
 		case *model.HttpAction:
 			data, err := actions.ProcessHttpAction(a)
@@ -53,18 +56,39 @@ func (s *BaseExecutor) Exec() {
 		}
 
 		if len(step.Asserts) > 0 {
-			if !s.DoAssert(&step) {
+			if !s.DoAsserts(&step) {
 				return
 			}
 		}
+		fmt.Printf("[%s]: done after %fs\n", step.Id, time.Since(st).Seconds())
 	}
 
 	fmt.Printf("Executing action completed after: %fs\n", time.Since(t).Seconds())
 }
 
-func (s *BaseExecutor) DoAssert(step *model.Step) bool {
-	fmt.Println("Checking step:", step.Id)
-	fmt.Println("Executing step:", step.Asserts)
+func (s *BaseExecutor) DoAsserts(step *model.Step) bool {
+	fmt.Println("Process asserts...")
+
+	data, ok := s.results[step.Id]
+	if !ok {
+		return false
+	}
+
+	for i, a := range step.Asserts {
+		pAssert, err := ParseAssert(a)
+		if err != nil {
+			fmt.Printf("[%d] Error parsing assert:\n%v\n", i, err)
+			continue
+		}
+		res := ProcessAssert(data, pAssert)
+		if !res {
+			fmt.Print(color.RedString("[%d] %s: %t\n", i, a, res))
+			return false
+		}
+
+		fmt.Print(color.GreenString("[%d] %s: %t\n", i, a, res))
+	}
+
 	return true
 }
 
