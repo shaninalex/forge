@@ -27,13 +27,12 @@ steps:
     type: http
     method: GET
     url: https://jsonplaceholder.typicode.com/users
-    query: {
-      "id": "{{ steps.create_user.response.body.id }}",
-      "_limit": "1",
-    }
+    query:
+      id": "{{ steps.create_user.response.body.id }}"
+      _limit: "1"
     assert:
-      - response.status == 200
-      - response.body.status == "PAID"
+      - status eq 200
+      - body.status eq PAID
 
   # The engine spins up a temporary listener
   #  - id: wait_for_payment_webhook
@@ -41,5 +40,5 @@ steps:
   #    port: 8080
   #    timeout_seconds: 30
   #    assert:
-  #      body.status: "succeeded"
-  #      body.order_id: "{{ steps.checkout.response.body.order_id }}"
+  #      - body.status eq "succeeded"
+  #      - body.order_id eq "{{ steps.checkout.response.body.order_id }}"

@@ -51,9 +51,21 @@ func (s *BaseExecutor) Exec() {
 			s.results[step.Id] = data
 			s.mux.Unlock()
 		}
+
+		if len(step.Asserts) > 0 {
+			if !s.DoAssert(&step) {
+				return
+			}
+		}
 	}
 
 	fmt.Printf("Executing action completed after: %fs\n", time.Since(t).Seconds())
+}
+
+func (s *BaseExecutor) DoAssert(step *model.Step) bool {
+	fmt.Println("Checking step:", step.Id)
+	fmt.Println("Executing step:", step.Asserts)
+	return true
 }
 
 func (s *BaseExecutor) Parse(pipeLinePath string) error {
