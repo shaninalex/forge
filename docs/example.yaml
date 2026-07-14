@@ -19,7 +19,7 @@ steps:
     method: POST
     url: https://jsonplaceholder.typicode.com/users
     headers:
-      Authorization: Bearer {{ env.TOKEN }}
+      Authorization: "Bearer {{ env.TOKEN }}"
     content_type: application/json
     body: >
       {
@@ -32,11 +32,12 @@ steps:
     method: GET
     url: https://jsonplaceholder.typicode.com/users
     query:
-      id: {{ create_user | body id }}
+      id: "{{ create_user | id }}"
       _limit: "1"
     assert:
       - "status eq 200"
       - "body 0.name eq Leanne Graham"
+      - "body 0.id eq {{ create_user | id }}" # TODO
 
   # The engine spins up a temporary listener
   #  - id: wait_for_payment_webhook

@@ -14,7 +14,7 @@ type Response struct {
 type DataBank map[string]*Response
 
 func (s DataBank) GetDataMap() map[string]string {
-	var output map[string]string
+	output := make(map[string]string)
 
 	for k, d := range s {
 		output[k] = string(d.Body)
