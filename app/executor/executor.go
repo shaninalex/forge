@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"gitlab.com/shaninalex/forgecore/app/executor/actions"
 	"gitlab.com/shaninalex/forgecore/app/model"
 	"gopkg.in/yaml.v3"
 )
@@ -40,7 +39,7 @@ func (s *BaseExecutor) Exec() {
 		fmt.Printf("[%s]: executing step\n", step.Id)
 		switch a := step.Action.(type) {
 		case *model.HttpAction:
-			data, err := actions.ProcessHttpAction(a)
+			data, err := ProcessHttpAction(a, s.results)
 			if err != nil {
 				fmt.Println("Error processing http action:", err)
 				continue

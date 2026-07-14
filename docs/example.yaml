@@ -5,11 +5,12 @@ steps:
     method: POST
     url: https://jsonplaceholder.typicode.com/posts
     content_type: application/json
-    body: '{
-      "title": "foo",
-      "body": "bar",
-      "userId": 1
-    }'
+    body: >
+      {
+        "title": "foo",
+        "body": "bar",
+        "userId": 1
+      }
     assert:
       - "status eq 201"
 
@@ -20,21 +21,23 @@ steps:
     headers:
       Authorization: "Bearer {{ env.TOKEN }}"
     content_type: application/json
-    body: '{
-      "username": "Bret",
-      "email": "Sincere@april.biz"
-    }'
+    body: >
+      {
+        "username": "Bret",
+        "email": "Sincere@april.biz"
+      }
 
   - id: verify_user
     type: http
     method: GET
     url: https://jsonplaceholder.typicode.com/users
     query:
-      id: "{{ create_user | body id }}"
+      id: "{{ create_user | id }}"
       _limit: "1"
     assert:
       - "status eq 200"
       - "body 0.name eq Leanne Graham"
+      - "body 0.id eq {{ create_user | id }}" # TODO
 
   # The engine spins up a temporary listener
   #  - id: wait_for_payment_webhook

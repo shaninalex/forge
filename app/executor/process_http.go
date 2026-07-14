@@ -1,4 +1,4 @@
-package actions
+package executor
 
 import (
 	"io"
@@ -10,7 +10,7 @@ import (
 	"gitlab.com/shaninalex/forgecore/app/model"
 )
 
-func ProcessHttpAction(action *model.HttpAction) (*model.Response, error) {
+func ProcessHttpAction(action *model.HttpAction, data model.DataBank) (*model.Response, error) {
 	var body io.Reader
 	if action.Method == model.MethodPost ||
 		action.Method == model.MethodPut ||
@@ -26,7 +26,14 @@ func ProcessHttpAction(action *model.HttpAction) (*model.Response, error) {
 	if action.Query != nil {
 		q := u.Query()
 		for k, v := range action.Query {
-			q.Set(k, v)
+			params := FindParams(v)
+			if len(params) > 0 {
+				for _, p := range params {
+					v = ApplyParams(p, data.GetDataMap())
+				}
+			} else {
+				q.Set(k, v)
+			}
 		}
 		u.RawQuery = q.Encode()
 	}

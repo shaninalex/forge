@@ -1,0 +1,22 @@
+info:
+  name: Create user
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: https://jsonplaceholder.typicode.com/users
+  body:
+    type: json
+    data: |
+      {
+        "username": "Bret",
+        "email": "Sincere@april.biz"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
